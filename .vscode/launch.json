@@ -1,0 +1,15 @@
+{
+	"version": "0.2.0",
+	"configurations":
+	[
+		{
+			"name": "Run",
+			"type": "node",
+			"request": "launch",
+			"runtimeVersion": "22.5.1",
+			"cwd": "${workspaceFolder}",
+			"program": "${workspaceFolder}/build/server.js",
+			"console": "integratedTerminal",
+		},
+	],
+}
