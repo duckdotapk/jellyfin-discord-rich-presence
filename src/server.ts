@@ -17,6 +17,10 @@ let currentSession: JellyfinApiLib.Session | null = null;
 
 const setActivity = async () =>
 {
+	//
+	// Get Session
+	//
+
 	const session = await JellyfinApiLib.fetchFirstSession(ConfigurationLib.configuration.jellyfinUsers);
 
 	if (fastDeepEqual(session, currentSession))
@@ -25,6 +29,10 @@ const setActivity = async () =>
 	}
 
 	currentSession = session;
+
+	//
+	// Show Idle Activity
+	//
 	
 	if (session == null || session.PlayState.IsPaused)
 	{
@@ -34,6 +42,21 @@ const setActivity = async () =>
 				details: "Idle",
 			});
 	}
+
+	const isPlayingHiddenAlbum = ConfigurationLib.configuration.hiddenAlbums.includes(session.NowPlayingItem.Album.trim());
+
+	if (isPlayingHiddenAlbum)
+	{
+		return await DiscordRpcLib.sendActivityFrame(
+			{
+				type: DiscordRpcLib.ACTIVITY_TYPE.LISTENING,
+				details: "Idle",
+			});
+	}
+
+	//
+	// Show Playing Activity
+	//
 
 	const albumArtUrl = ConfigurationLib.configuration.jellyfinUrl + "/Items/" + session.NowPlayingItem.AlbumId + "/Images/Primary";
 
@@ -47,7 +70,7 @@ const setActivity = async () =>
 		{
 			type: DiscordRpcLib.ACTIVITY_TYPE.LISTENING,
 			details: session.NowPlayingItem.Name,
-			state: session.NowPlayingItem.Artists.join(", "),
+			state: session.NowPlayingItem.Artists.map((artist) => artist.trim()).join(", "),
 			assets:
 			{
 				large_image: albumArtUrl,

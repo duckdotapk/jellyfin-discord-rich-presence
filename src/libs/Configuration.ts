@@ -18,6 +18,8 @@ export const ConfigurationSchema = z.object(
 		jellyfinUsers: z.array(z.string()),
 
 		discordClientId: z.string().default("1313877917134229524"),
+
+		hiddenAlbums: z.array(z.string()).default([]),
 	});
 
 //

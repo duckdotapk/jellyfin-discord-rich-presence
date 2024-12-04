@@ -33,7 +33,15 @@ jellyfinUsers:
 # Discord client ID
 # Optional, I provide a default one but the option is here if you want to use your own
 discordClientId: "1313877917134229524"
+
+# Specify album names that will not show up in the rich presence
+# If the album name matches, it will instead show the "idle" state as if you weren't listening to anything
+hiddenAlbums:
+- "Top Secret Project: Official Soundtrack"
 ```
+
+## Changelog
+[Changelog](https://github.com/duckdotapk/jellyfin-discord-rich-presence/blob/main/CHANGELOG.md)
 
 ## License
 [MIT](https://github.com/duckdotapk/jellyfin-discord-rich-presence/blob/main/LICENSE.md)
