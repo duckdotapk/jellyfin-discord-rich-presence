@@ -2,7 +2,6 @@
 // Imports
 //
 
-import fastDeepEqual from "fast-deep-equal";
 import { DateTime } from "luxon";
 
 import * as ConfigurationLib from "./libs/Configuration.js";
@@ -13,8 +12,6 @@ import * as JellyfinApiLib from "./libs/JellyfinApi.js";
 // Script
 //
 
-let currentSession: JellyfinApiLib.Session | null = null;
-
 const setActivity = async () =>
 {
 	//
@@ -22,13 +19,6 @@ const setActivity = async () =>
 	//
 
 	const session = await JellyfinApiLib.fetchFirstSession(ConfigurationLib.configuration.jellyfinUsers);
-
-	if (fastDeepEqual(session, currentSession))
-	{
-		return await DiscordRpcLib.sendPing();
-	}
-
-	currentSession = session;
 
 	//
 	// Show Idle Activity
