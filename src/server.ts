@@ -15,6 +15,31 @@ import * as JellyfinApiLib from "./libs/JellyfinApi.js";
 const setActivity = async () =>
 {
 	//
+	// Await Socket Connected
+	//
+
+	if (DiscordRpcLib.socket.connecting)
+	{
+		console.log("Waiting for socket connection...");
+
+		await new Promise<void>(
+			(resolve) =>
+			{
+				DiscordRpcLib.socket.once("connect",
+					() =>
+					{
+						resolve();
+					});
+			});
+
+		console.log("Socket connected! Sending handshake...");
+
+		await DiscordRpcLib.sendHandshake();
+
+		console.log("Handshake sent!");
+	}
+
+	//
 	// Get Session
 	//
 
@@ -24,24 +49,27 @@ const setActivity = async () =>
 	// Show Idle Activity
 	//
 	
-	if (session == null || session.PlayState.IsPaused)
+	if (session == null)
 	{
-		return await DiscordRpcLib.sendActivityFrame(
-			{
-				type: DiscordRpcLib.ACTIVITY_TYPE.LISTENING,
-				details: "Idle",
-			});
+		console.log("No session. Clearing activity...");
+
+		return await DiscordRpcLib.sendActivityFrame(null);
+	}
+
+	if (session.PlayState.IsPaused)
+	{
+		console.log("Paused. Clearing activity...");
+
+		return await DiscordRpcLib.sendActivityFrame(null);
 	}
 
 	const isPlayingHiddenAlbum = ConfigurationLib.configuration.hiddenAlbums.includes(session.NowPlayingItem.Album.trim());
 
 	if (isPlayingHiddenAlbum)
 	{
-		return await DiscordRpcLib.sendActivityFrame(
-			{
-				type: DiscordRpcLib.ACTIVITY_TYPE.LISTENING,
-				details: "Idle",
-			});
+		console.log("Hidden album. Clearing activity...");
+
+		return await DiscordRpcLib.sendActivityFrame(null);
 	}
 
 	//
@@ -55,6 +83,8 @@ const setActivity = async () =>
 
 	const startDateTime = DateTime.utc().minus({ seconds: positionSeconds });
 	const endDateTime = startDateTime.plus({ seconds: runtimeSeconds });
+
+	console.log("Setting activity to " + session.NowPlayingItem.Name + " by " + session.NowPlayingItem.Artists.join(", ") + "...");
 
 	await DiscordRpcLib.sendActivityFrame(
 		{

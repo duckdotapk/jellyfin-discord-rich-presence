@@ -56,25 +56,7 @@ const opCodes =
 	PONG: 4,
 };
 
-const socket = net.createConnection(discordPipe);
-
-await new Promise<void>(
-	(resolve) =>
-	{
-		socket.once("connect",
-			async () =>
-			{
-				console.log("[DiscordRpc] Connected!");
-
-				console.log("[DiscordRpc] Sending handshake...");
-
-				await sendHandshake();
-
-				console.log("[DiscordRpc] Handshake sent!");
-
-				resolve();
-			});
-	});
+export const socket = net.createConnection(discordPipe);
 
 //
 // Utility Functions
@@ -121,7 +103,7 @@ export async function sendHandshake()
 	await writeSocket(opCodes.HANDSHAKE, handshakePayload);
 }
 
-export async function sendActivityFrame(activity: Activity)
+export async function sendActivityFrame(activity: Activity | null)
 {
 	const activityPayload =
 	{
@@ -135,9 +117,4 @@ export async function sendActivityFrame(activity: Activity)
 	};
 
 	await writeSocket(opCodes.FRAME, activityPayload);
-}
-
-export async function sendPing()
-{
-	await writeSocket(opCodes.PING, {});
 }
