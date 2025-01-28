@@ -6,7 +6,7 @@
 			"name": "Run",
 			"type": "node",
 			"request": "launch",
-			"runtimeVersion": "22.5.1",
+			"runtimeVersion": "22.12.0",
 			"cwd": "${workspaceFolder}",
 			"program": "${workspaceFolder}/build/server.js",
 			"console": "integratedTerminal",

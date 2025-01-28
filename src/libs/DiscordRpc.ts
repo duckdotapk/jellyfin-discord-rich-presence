@@ -45,7 +45,7 @@ export const ACTIVITY_TYPE =
 
 const discordPipe = process.platform === "win32" 
     ? "\\\\.\\pipe\\discord-ipc-0" 
-    : "/tmp/discord-ipc-0";
+    : "/run/user/1000/discord-ipc-0"; // TODO: don't hardcode the user id!
 
 const opCodes =
 {
