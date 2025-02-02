@@ -3,6 +3,7 @@
 //
 
 import net from "node:net";
+import os from "node:os";
 
 import { configuration } from "./Configuration.js";
 
@@ -45,7 +46,7 @@ export const ACTIVITY_TYPE =
 
 const discordPipe = process.platform === "win32" 
     ? "\\\\.\\pipe\\discord-ipc-0" 
-    : "/run/user/1000/discord-ipc-0"; // TODO: don't hardcode the user id!
+    : "/run/user/" + os.userInfo().uid + "/discord-ipc-0";
 
 const opCodes =
 {
